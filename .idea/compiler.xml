@@ -6,9 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="The_300_Data_Migration_Project" />
         <module name="Migration_Project" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="The_300_Data_Migration_Project" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
