@@ -113,6 +113,14 @@ public class Employee {
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Employee e)) {
+            return false;
+        }
+
+        return this.idNumber == e.idNumber;
     }
 }
