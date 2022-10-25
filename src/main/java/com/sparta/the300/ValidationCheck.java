@@ -18,11 +18,11 @@ public class ValidationCheck {
     }
 
     public static boolean isCorrectGender(String gender){
-        return !gender.equals("X");
+        return (gender.equalsIgnoreCase("F") || gender.equalsIgnoreCase("M"));
     }
 
     public static boolean hasMiddleName(String middleName){
-        return !middleName.equals("false");
+        return !middleName.equalsIgnoreCase("false");
     }
 
     public static boolean isCorrectSalary(int salary){
