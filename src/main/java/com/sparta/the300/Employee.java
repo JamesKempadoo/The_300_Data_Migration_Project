@@ -1,30 +1,34 @@
 package com.sparta.the300;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class Employee {
     private int idNumber;
     private String namePrefix;
     private String firstName;
-    private char middleInitial;
+    private String middleInitial;
     private String lastName;
-    private char gender;
+    private String gender;
     private String email;
     private Date dateOfBirth;
     private Date dateOfEmployment;
     private int salary;
 
-    public Employee(int idNumber, String namePrefix, String firstName, char middleInitial, String lastName, char gender, String email, Date dateOfBirth, Date dateOfEmployment, int salary) {
-        this.idNumber = idNumber;
-        this.namePrefix = namePrefix;
-        this.firstName = firstName;
-        this.middleInitial = middleInitial;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.email = email;
-        this.dateOfBirth = dateOfBirth;
-        this.dateOfEmployment = dateOfEmployment;
-        this.salary = salary;
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
+
+    public Employee(String[] tokens) throws ParseException {
+        this.idNumber = Integer.parseInt(tokens[0]);
+        this.namePrefix = tokens[1];
+        this.firstName = tokens[2];
+        this.middleInitial = tokens[3];
+        this.lastName = tokens[4];
+        this.gender = tokens[5];
+        this.email = tokens[6];
+        this.dateOfBirth = new Date(SIMPLE_DATE_FORMAT.parse(tokens[7]).getTime());
+        this.dateOfEmployment = new Date(SIMPLE_DATE_FORMAT.parse(tokens[8]).getTime());
+        this.salary = Integer.parseInt(tokens[9]);
     }
 
     public int getIdNumber() {
@@ -51,11 +55,11 @@ public class Employee {
         this.firstName = firstName;
     }
 
-    public char getMiddleInitial() {
+    public String getMiddleInitial() {
         return middleInitial;
     }
 
-    public void setMiddleInitial(char middleInitial) {
+    public void setMiddleInitial(String middleInitial) {
         this.middleInitial = middleInitial;
     }
 
@@ -67,11 +71,11 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -105,5 +109,10 @@ public class Employee {
 
     public void setSalary(int salary) {
         this.salary = salary;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }
