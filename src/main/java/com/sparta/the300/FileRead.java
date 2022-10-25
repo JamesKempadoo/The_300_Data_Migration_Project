@@ -15,11 +15,12 @@ public class FileRead {
         try (FileReader fileReader = new FileReader(filename);
              BufferedReader bufferedReader = new BufferedReader(fileReader)){
             String headings = bufferedReader.readLine();
-            System.out.println("Headings: " + headings);
-            String line;
             SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
+
                 Employee employee = generateEmployee(line, formatter);
+
                 employeeArrayList.add(employee);
             }
         } catch (IOException | ParseException e) {
@@ -31,8 +32,6 @@ public class FileRead {
     private static Employee generateEmployee(String line, SimpleDateFormat formatter) throws ParseException {
         String[] tokens;
         tokens = line.split(",");
-        Employee employee = new Employee(Integer.parseInt(tokens[0]),tokens[1],tokens[2],tokens[3].charAt(0),tokens[4],tokens[5].charAt(0),tokens[6],
-                new Date(formatter.parse(tokens[7]).getTime()),new Date(formatter.parse(tokens[8]).getTime()),Integer.parseInt(tokens[9]));
-        return employee;
+        return new Employee(tokens);
     }
 }
