@@ -1,18 +1,18 @@
 package com.sparta.the300;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Employee {
-    int idNumber;
-    String namePrefix;
-    String firstName;
-    char middleInitial;
-    String lastName;
-    char gender;
-    String email;
-    Date dateOfBirth;
-    Date dateOfEmployment;
-    int salary;
+    private int idNumber;
+    private String namePrefix;
+    private String firstName;
+    private char middleInitial;
+    private String lastName;
+    private char gender;
+    private String email;
+    private Date dateOfBirth;
+    private Date dateOfEmployment;
+    private int salary;
 
     public Employee(int idNumber, String namePrefix, String firstName, char middleInitial, String lastName, char gender, String email, Date dateOfBirth, Date dateOfEmployment, int salary) {
         this.idNumber = idNumber;
