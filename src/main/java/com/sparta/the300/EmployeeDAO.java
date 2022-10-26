@@ -21,12 +21,12 @@ public class EmployeeDAO {
             "email, birth_date, join_date, salary) " +
             "VALUES(?,?,?,?,?,?,?,?,?,?);";
     private static final String CREATE_TABLE = "CREATE TABLE employees (" +
-            "employee_id VARCHAR(10) NOT NULL PRIMARY KEY,\n" +
+            "employee_id VARCHAR(10) NOT NULL PRIMARY KEY," +
             "title VARCHAR(5)," +
             "first_name VARCHAR(30)," +
             "middle_initial CHAR(1)," +
             "last_name VARCHAR(30)," +
-            "gender CHAR(1)," +
+            "gender VARCHAR(1)," +
             "email VARCHAR(40)," +
             "birth_date DATE," +
             "join_date DATE," +
@@ -120,6 +120,7 @@ public class EmployeeDAO {
                 //log
             }
             createTable();
+            connection.commit();
                 //log
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -183,6 +184,7 @@ public class EmployeeDAO {
                 //preparedStatement.executeUpdate();
             }
             preparedStatement.executeBatch();
+            connection.commit();
 
         } catch (SQLException e) {
             e.printStackTrace();
