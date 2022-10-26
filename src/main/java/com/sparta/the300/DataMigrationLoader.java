@@ -8,9 +8,21 @@ import java.util.concurrent.TimeUnit;
 public class DataMigrationLoader {
     private static Scanner sc = new Scanner(System.in);
     public static void start() {
-        EmployeeDAO employeeDAO = creation();
+        System.out.println("Enter 1 to add to database, 2 to access records.");
+        try{
+            int option = sc.nextInt();
+            EmployeeDAO employeeDAO = new EmployeeDAO();
+            if (option == 1) {
+                employeeDAO = creation();
+            } else if (option == 2) {
+                retrieval(employeeDAO);
+            } else {
+                start();
+            }
+        } catch (InputMismatchException e){
+            System.out.println("Option not valid");
+        }
 
-        retrieval(employeeDAO);
     }
 
     public static void concurrently(HashSet<Employee> validEntries, EmployeeDAO employeeDAO, int numberOfThreads){
@@ -42,7 +54,6 @@ public class DataMigrationLoader {
                 throw new RuntimeException(e);
             }
         }
-        
 
     }
 
@@ -55,8 +66,9 @@ public class DataMigrationLoader {
             sc.nextLine();
             String filter = "%" + sc.nextLine() + "%";
             employeeDAO.selectIndividualRecords(column, filter);
-        } catch(InputMismatchException e){
+        } catch(InputMismatchException | ArrayIndexOutOfBoundsException e){
             System.out.println("Wrong option entered");
+
         }
     }
 
@@ -68,7 +80,9 @@ public class DataMigrationLoader {
         concurrently(validEntries,  employeeDAO, 8);
         long end = System.nanoTime();
 
-        DisplayManager.printPersistingResults(start, end, 0,0,0,0);
+        int duplicatedRecords = CSVReader.getDuplicatedEntries().size();
+        int corruptedRecords = CSVReader.getCorruptedEntries().size() + duplicatedRecords;
+        DisplayManager.printPersistingResults(start, end, validEntries.size(), corruptedRecords, duplicatedRecords,0);
         return employeeDAO;
     }
 }
