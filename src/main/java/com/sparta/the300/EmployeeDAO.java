@@ -3,6 +3,7 @@ package com.sparta.the300;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -20,12 +21,12 @@ public class EmployeeDAO {
             "email, birth_date, join_date, salary) " +
             "VALUES(?,?,?,?,?,?,?,?,?,?);";
     private static final String CREATE_TABLE = "CREATE TABLE employees (" +
-            "employee_id VARCHAR(10) NOT NULL PRIMARY KEY,\n" +
+            "employee_id VARCHAR(10) NOT NULL PRIMARY KEY," +
             "title VARCHAR(5)," +
             "first_name VARCHAR(30)," +
             "middle_initial CHAR(1)," +
             "last_name VARCHAR(30)," +
-            "gender CHAR(1)," +
+            "gender VARCHAR(1)," +
             "email VARCHAR(40)," +
             "birth_date DATE," +
             "join_date DATE," +
@@ -119,6 +120,7 @@ public class EmployeeDAO {
                 //log
             }
             createTable();
+            connection.commit();
                 //log
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -161,7 +163,7 @@ public class EmployeeDAO {
     }
 
 
-    public void insertIntoTable(List<Employee> employees) {
+    public void insertIntoTable(HashSet<Employee> employees) {
         tryCon();
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO)) {
             if (connection == null || connection.isClosed()) {
@@ -175,12 +177,14 @@ public class EmployeeDAO {
                 preparedStatement.setString(5, employee.getLastName());
                 preparedStatement.setString(6, employee.getGender());
                 preparedStatement.setString(7, employee.getEmail());
-                preparedStatement.setDate(8, new java.sql.Date(employee.getDateOfBirth().getTime()));
-                preparedStatement.setDate(9, new java.sql.Date(employee.getDateOfEmployment().getTime()));
+                preparedStatement.setDate(8, employee.getDateOfBirth());
+                preparedStatement.setDate(9, employee.getDateOfEmployment());
                 preparedStatement.setInt(10, employee.getSalary());
                 preparedStatement.addBatch();
+                //preparedStatement.executeUpdate();
             }
             preparedStatement.executeBatch();
+            connection.commit();
 
         } catch (SQLException e) {
             e.printStackTrace();
