@@ -5,8 +5,10 @@ import java.sql.Date;
 public class ValidationCheck {
 
     public static boolean isEmployeeValid(Employee employee) {
-
-        return true;
+        return isDateWithinRange(employee.getDateOfBirth()) && isDateWithinRange(employee.getDateOfEmployment())
+                && isEmploymentDateAfterBirthDate(employee.getDateOfBirth(), employee.getDateOfEmployment())
+                && isCorrectGender(employee.getGender()) && hasMiddleName(employee.getMiddleInitial())
+                && isCorrectSalary(employee.getSalary());
     }
 
     public static boolean isDateWithinRange(Date date) {
