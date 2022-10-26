@@ -1,10 +1,12 @@
 package com.sparta.the300;
 
+import java.util.HashSet;
+
 public class DataMigrationLoader {
     public static void start() {
-        int x = CSVReader.readDataFile("src/main/resources/EmployeeRecords.csv").size();
-        System.out.println(x);
-        System.out.println(CSVReader.getCorruptedEntries().size());
-        System.out.println(x + CSVReader.getCorruptedEntries().size());
+        HashSet<Employee> validEntries = CSVReader.readDataFile("src/main/resources/EmployeeRecords.csv");
+        EmployeeDAO employeeDAO = new EmployeeDAO();
+        employeeDAO.createEmployeeTable();
+        employeeDAO.insertIntoTable(validEntries);
     }
 }
