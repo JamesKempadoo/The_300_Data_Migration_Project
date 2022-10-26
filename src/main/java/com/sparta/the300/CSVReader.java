@@ -11,7 +11,7 @@ import java.util.HashSet;
 public class CSVReader {
 
     private static final ArrayList<Employee> corruptedEntries = new ArrayList<>();
-
+    private static final ArrayList<Employee> duplicatedEntries = new ArrayList<>();
     private static String headings = null;
 
     public static HashSet<Employee> readDataFile(String filename) {
@@ -33,8 +33,10 @@ public class CSVReader {
             String line;
             while ((line = br.readLine()) != null) {
                 Employee employee = generateEmployee(line);
-                if(!ValidationCheck.isEmployeeValid(employee) || !employeesSet.add(employee)) {
+                if(!ValidationCheck.isEmployeeValid(employee)) {
                     corruptedEntries.add(employee);
+                } else if(!employeesSet.add(employee)){
+                    duplicatedEntries.add(employee);
                 }
 
             }
@@ -53,6 +55,10 @@ public class CSVReader {
 
     public static ArrayList<Employee> getCorruptedEntries() {
         return corruptedEntries;
+    }
+
+    public static ArrayList<Employee> getDuplicatedEntries() {
+        return duplicatedEntries;
     }
 
     public static String getHeadings() {
