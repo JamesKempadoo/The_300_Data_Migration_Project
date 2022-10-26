@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 
 public class EmployeeDAO {
@@ -128,7 +129,7 @@ public class EmployeeDAO {
         }
     }
 
-    private void tryCon(){
+    public void tryCon(){
         try {
             if (connection == null ||connection.isClosed()){
                 connectingToDataBase();}
@@ -162,8 +163,7 @@ public class EmployeeDAO {
     }
 
 
-    public void insertIntoTable(HashSet<Employee> employees) {
-        tryCon();
+    public void insertIntoTable(List<Employee> employees) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO)) {
             if (connection == null || connection.isClosed()) {
                 connectingToDataBase();
@@ -183,12 +183,20 @@ public class EmployeeDAO {
                 //preparedStatement.executeUpdate();
             }
             preparedStatement.executeBatch();
-            connection.commit();
+            //connection.commit();
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            disconnectingFromDatabase();
+            //disconnectingFromDatabase();
+        }
+    }
+
+    public void commit() {
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
