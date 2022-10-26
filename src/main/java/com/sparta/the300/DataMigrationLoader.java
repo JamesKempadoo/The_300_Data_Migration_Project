@@ -55,15 +55,6 @@ public class DataMigrationLoader {
             }
         }
 
-        //employeeDAO.commit();
-//        for (int j = 0; j < threadCounter; j++) {
-//            try {
-//                threads[j].join();
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-        //       Fixes rounding errors from dividing
     }
 
 
