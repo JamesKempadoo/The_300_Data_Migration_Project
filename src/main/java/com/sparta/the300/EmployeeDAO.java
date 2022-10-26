@@ -36,6 +36,7 @@ public class EmployeeDAO {
         try{
             properties.load(new FileReader("src/main/resources/login.properties"));
             connection = DriverManager.getConnection(URL, properties.getProperty("username"), properties.getProperty("password"));
+            connection.setAutoCommit(false);
         }catch (IOException e){
             //log
             e.printStackTrace();
@@ -177,9 +178,9 @@ public class EmployeeDAO {
                 preparedStatement.setDate(8, new java.sql.Date(employee.getDateOfBirth().getTime()));
                 preparedStatement.setDate(9, new java.sql.Date(employee.getDateOfEmployment().getTime()));
                 preparedStatement.setInt(10, employee.getSalary());
-                preparedStatement.executeUpdate();
+                preparedStatement.addBatch();
             }
-
+            preparedStatement.executeBatch();
 
         } catch (SQLException e) {
             e.printStackTrace();
