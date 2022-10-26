@@ -112,6 +112,11 @@ public class Employee {
     }
 
     @Override
+    public int hashCode() {
+        return this.idNumber;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
@@ -122,5 +127,21 @@ public class Employee {
         }
 
         return this.idNumber == e.idNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "idNumber=" + idNumber +
+                ", namePrefix='" + namePrefix + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", middleInitial='" + middleInitial + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", email='" + email + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", dateOfEmployment=" + dateOfEmployment +
+                ", salary=" + salary +
+                '}';
     }
 }
