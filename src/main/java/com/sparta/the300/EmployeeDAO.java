@@ -4,7 +4,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
 
 public class EmployeeDAO {
@@ -192,4 +191,42 @@ public class EmployeeDAO {
             disconnectingFromDatabase();
         }
     }
+
+    public static final String[] headings = {"employee_id", "first_name", "last_name", "gender", "email",
+            "birth_date", "join_date"};
+    public String getColumnToSearchIn(int column){
+        return headings[column];
+    }
+    public void selectIndividualRecords(String column, String filter){
+        String SELECT_INDIVIDUAL_RECORDS = "SELECT * FROM employees WHERE " + column + " LIKE ?";
+        int count = 0;
+        tryCon();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_INDIVIDUAL_RECORDS)){
+            preparedStatement.setString(1, filter);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet != null){
+                while(resultSet.next()){
+                    System.out.println(resultSet.getString(1)+ " " +
+                            resultSet.getString(2)+ " " +
+                            resultSet.getString(3)+ " " +
+                            resultSet.getString(4)+ " " +
+                            resultSet.getString(5)+ " " +
+                            resultSet.getString(6)+ " " +
+                            resultSet.getString(7)+ " " +
+                            resultSet.getString(8)+ " " +
+                            resultSet.getString(9)+ " " +
+                            resultSet.getInt(10));
+                    count++;
+                }
+                System.out.println(count + " records found.");
+            } else {
+                System.out.println("0 records found");
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    };
 }
