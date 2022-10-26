@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -34,9 +33,10 @@ public class CSVReader {
             String line;
             while ((line = br.readLine()) != null) {
                 Employee employee = generateEmployee(line);
-                if(!employeesSet.add(employee)) {
+                if(!ValidationCheck.isEmployeeValid(employee) || !employeesSet.add(employee)) {
                     corruptedEntries.add(employee);
                 }
+
             }
         } catch (IOException | ParseException ex) {
             ex.printStackTrace();
