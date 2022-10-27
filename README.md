@@ -19,6 +19,7 @@ data, corrupted data and duplicate data.
 
 ### Usage
 
+![](img/CodingTime.jpg)
 ### Installation
 
 - Download Zip file from git directory.
