@@ -41,7 +41,7 @@ public class DataMigrationLoader {
         HashSet<Employee> validEntries = CSVReader.getValidEntries();
         int duplicatedRecords = CSVReader.getDuplicatedEntries().size();
         int corruptedRecords = CSVReader.getCorruptedEntries().size() + duplicatedRecords;
-        DisplayManager.printPersistingResults(start, end, validEntries.size(), corruptedRecords, duplicatedRecords, 0);
+        DisplayManager.printPersistingResults(start, end, validEntries.size(), corruptedRecords, duplicatedRecords);
 
         DisplayManager.printRetrieveDataOption();
         if (in.next().equals("y")) {
@@ -56,7 +56,13 @@ public class DataMigrationLoader {
             String column = employeeDAO.getColumnToSearchIn(in.nextInt());
             System.out.println("Type in your filter below:");
             in.nextLine();
-            String filter = "%" + in.nextLine() + "%";
+
+            String filter;
+            if(column.equals("employee_id")){
+                filter = in.nextLine();
+            } else {
+                filter = "%" + in.nextLine() + "%";
+            }
             employeeDAO.selectIndividualRecords(column, filter);
         } catch (InputMismatchException | ArrayIndexOutOfBoundsException e) {
             System.out.println("Wrong option entered");

@@ -35,8 +35,7 @@ public class DisplayManager {
     }
 
     public static void printPersistingResults(long start, long end, int uncorruptedRecords, int corruptedRecords,
-                                      int duplicated,
-                                    int withMissingFields){
+                                      int duplicated){
 
         System.out.println("Execution time: " + (end-start) + " nanoseconds");
         System.out.println("Execution time: " + TimeUnit.SECONDS.convert((end-start),TimeUnit.NANOSECONDS) + " seconds");
@@ -49,12 +48,15 @@ public class DisplayManager {
                         ">>>>>> " + duplicated + " duplicated");
     }
 
-    public static void printCorruptedRecords(List<Employee> employees) {
-        //After filtering employees
+    public static void printCorruptedRecords(List<Employee> corruptedList, List<Employee> duplicatedList) {
 
         System.out.println("Corrupted records:\n");
 
-        for(Employee employee: employees){
+        for(Employee employee: corruptedList){
+            System.out.println(employee.toString());
+        }
+
+        for(Employee employee: duplicatedList){
             System.out.println(employee.toString());
         }
 
