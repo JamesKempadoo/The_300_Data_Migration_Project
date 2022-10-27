@@ -1,9 +1,7 @@
 package com.sparta.the300;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.sql.Connection;
 import java.util.List;
-import java.util.Spliterator;
 
 public class ThreadTask implements Runnable{
     private final List<Employee> sublist;
@@ -18,6 +16,9 @@ public class ThreadTask implements Runnable{
 
     @Override
     public void run() {
-        employeeDAO.insertIntoTable(sublist);
+        Connection connection = employeeDAO.connectingToDataBase();
+        employeeDAO.insertIntoTable(sublist, connection);
+        employeeDAO.commit(connection);
+
     }
 }
