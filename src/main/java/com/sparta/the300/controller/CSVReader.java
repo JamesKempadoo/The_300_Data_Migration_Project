@@ -114,4 +114,8 @@ public class CSVReader {
     public static HashSet<Employee> getValidEntries() {
         return validEntries;
     }
+
+    public static EmployeeDAO getEmployeeDAO() {
+        return employeeDAO;
+    }
 }
