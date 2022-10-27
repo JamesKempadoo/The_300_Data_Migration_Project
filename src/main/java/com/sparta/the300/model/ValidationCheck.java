@@ -26,7 +26,7 @@ public class ValidationCheck {
     }
 
     public static boolean hasMiddleName(String middleName){
-        return !middleName.equalsIgnoreCase("false");
+        return middleName.length() == 1;
     }
 
     public static boolean isCorrectSalary(int salary){
