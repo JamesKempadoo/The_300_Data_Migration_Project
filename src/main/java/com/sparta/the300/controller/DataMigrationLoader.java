@@ -10,20 +10,20 @@ import java.util.*;
 public class DataMigrationLoader {
     private static Scanner sc = new Scanner(System.in);
     public static void start() {
-//        System.out.println("Enter 1 to add to database, 2 to access records.");
-//        try{
-//            int option = sc.nextInt();
-//            EmployeeDAO employeeDAO = new EmployeeDAO();
-//            if (option == 1) {
-//                employeeDAO = creation();
-//            } else if (option == 2) {
-//                retrieval(employeeDAO);
-//            } else {
-//                start();
-//            }
-//        } catch (InputMismatchException e){
-//            System.out.println("Option not valid");
-//        }
+        System.out.println("Enter 1 to add to database, 2 to access records.");
+        try{
+            int option = sc.nextInt();
+            EmployeeDAO employeeDAO = new EmployeeDAO();
+            if (option == 1) {
+                CSVReader.readDataFile("src/main/resources/EmployeeRecordsLarge.csv", 16, true);
+            } else if (option == 2) {
+                retrieval(employeeDAO);
+            } else {
+                start();
+            }
+        } catch (InputMismatchException e){
+            System.out.println("Option not valid");
+        }
         CSVReader.readDataFile("src/main/resources/EmployeeRecordsLarge.csv", 16, true);
     }
 
