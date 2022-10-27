@@ -1,17 +1,35 @@
 package com.sparta.the300.controller;
 
-import com.sparta.the300.model.BatchWorker;
 import com.sparta.the300.model.Employee;
 import com.sparta.the300.model.EmployeeDAO;
 import com.sparta.the300.view.DisplayManager;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class DataMigrationLoader {
     private static Scanner sc = new Scanner(System.in);
 
-    public static void start() {
-        System.out.println("Enter 1 to add to database, 2 to access records.");
+    public static void start() {/*
+        Scanner in = new Scanner(System.in);
+        DisplayManager.displayInitialConfiguration();
+        do {
+            try {
+                Pattern pattern = Pattern.compile(".*.csv");
+                String filename = in.next(pattern);
+                pattern = Pattern.compile("y|n");
+                String threaded = in.next(pattern);
+                int numOfThreads = 0;
+                if (threaded.equalsIgnoreCase("y")) {
+                    numOfThreads = Integer.parseInt(in.next());
+                }
+                break;
+            } catch (Exception e) {
+                DisplayManager.printWrongInputMessage();
+                in.nextLine();
+            }
+        } while(true);
+*/
         try {
             int option = sc.nextInt();
             EmployeeDAO employeeDAO = new EmployeeDAO();

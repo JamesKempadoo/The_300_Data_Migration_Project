@@ -8,6 +8,27 @@ import java.util.concurrent.TimeUnit;
 
 public class DisplayManager {
 
+    public static void displayInitialConfiguration() {
+        System.out.print("""
+                Please enter:
+                1. The file name
+                2. If you want to use threaded version ('y' for yes, 'n' for no)
+                3. The number of threads (if you answer 'y' to the above)
+                
+                Parse your inputs seperated by space:""");
+    }
+
+    public static void printWrongInputMessage() {
+        System.out.print("""
+                
+                Wrong input! Please enter your inputs as specified above!
+                Example Inputs:
+                1. example.csv y 16
+                2. example1.csv n
+                
+                Parse your inputs seperated by space:""");
+    }
+
     public static void printPersistingResults(long start, long end, int uncorruptedRecords, int corruptedRecords,
                                       int duplicated,
                                     int withMissingFields){
