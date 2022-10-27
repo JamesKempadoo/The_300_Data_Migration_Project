@@ -183,6 +183,7 @@ public class EmployeeDAO {
                 //preparedStatement.executeUpdate();
             }
             preparedStatement.executeBatch();
+            connection.commit();
             //connection.commit();
 
         } catch (SQLException e) {

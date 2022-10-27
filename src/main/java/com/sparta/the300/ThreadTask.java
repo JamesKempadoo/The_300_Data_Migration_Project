@@ -18,11 +18,6 @@ public class ThreadTask implements Runnable{
 
     @Override
     public void run() {
-        synchronized (this){
-            employeeDAO.insertIntoTable(sublist);
-            employeeDAO.commit();
-        }
-
-
+        employeeDAO.insertIntoTable(sublist);
     }
 }
