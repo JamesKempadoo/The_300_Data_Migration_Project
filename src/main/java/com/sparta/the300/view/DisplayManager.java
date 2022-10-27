@@ -1,7 +1,7 @@
 package com.sparta.the300.view;
 
-import com.sparta.the300.Employee;
-import com.sparta.the300.EmployeeDAO;
+import com.sparta.the300.model.Employee;
+import com.sparta.the300.model.EmployeeDAO;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +41,6 @@ public class DisplayManager {
                 for(int i=0; i< headings.length; i++){
                     System.out.println(i + ". " + headings[i]);
                 }
-    };
+    }
 
 }

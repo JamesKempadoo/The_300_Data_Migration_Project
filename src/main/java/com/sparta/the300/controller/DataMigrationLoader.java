@@ -1,5 +1,8 @@
-package com.sparta.the300;
+package com.sparta.the300.controller;
 
+import com.sparta.the300.model.BatchWorker;
+import com.sparta.the300.model.Employee;
+import com.sparta.the300.model.EmployeeDAO;
 import com.sparta.the300.view.DisplayManager;
 
 import java.util.*;
@@ -7,21 +10,21 @@ import java.util.*;
 public class DataMigrationLoader {
     private static Scanner sc = new Scanner(System.in);
     public static void start() {
-        System.out.println("Enter 1 to add to database, 2 to access records.");
-        try{
-            int option = sc.nextInt();
-            EmployeeDAO employeeDAO = new EmployeeDAO();
-            if (option == 1) {
-                employeeDAO = creation();
-            } else if (option == 2) {
-                retrieval(employeeDAO);
-            } else {
-                start();
-            }
-        } catch (InputMismatchException e){
-            System.out.println("Option not valid");
-        }
-
+//        System.out.println("Enter 1 to add to database, 2 to access records.");
+//        try{
+//            int option = sc.nextInt();
+//            EmployeeDAO employeeDAO = new EmployeeDAO();
+//            if (option == 1) {
+//                employeeDAO = creation();
+//            } else if (option == 2) {
+//                retrieval(employeeDAO);
+//            } else {
+//                start();
+//            }
+//        } catch (InputMismatchException e){
+//            System.out.println("Option not valid");
+//        }
+        CSVReader.readDataFile("src/main/resources/EmployeeRecordsLarge.csv", 16, true);
     }
 
     public static void concurrently(HashSet<Employee> validEntries, EmployeeDAO employeeDAO, int numberOfThreads){
@@ -40,7 +43,7 @@ public class DataMigrationLoader {
                 subArray= arrayList.subList(i,i+x1);
             }
             //employeeDAO.tryCon();
-            threads[threadCounter] = new Thread(new ThreadTask(subArray,employeeDAO));
+            threads[threadCounter] = new Thread(new BatchWorker(subArray,employeeDAO));
             threads[threadCounter].setName("Thread: " + threadCounter);
             threads[threadCounter].start();
             threadCounter++;
@@ -67,17 +70,17 @@ public class DataMigrationLoader {
         }
     }
 
-    private static EmployeeDAO creation() {
-        long start = System.nanoTime();
-        HashSet<Employee> validEntries = CSVReader.readDataFile("src/main/resources/EmployeeRecordsLarge.csv");
-        EmployeeDAO employeeDAO = new EmployeeDAO();
-        employeeDAO.createEmployeeTable();
-        concurrently(validEntries, employeeDAO, 64);
-        long end = System.nanoTime();
-
-        int duplicatedRecords = CSVReader.getDuplicatedEntries().size();
-        int corruptedRecords = CSVReader.getCorruptedEntries().size() + duplicatedRecords;
-        DisplayManager.printPersistingResults(start, end, validEntries.size(), corruptedRecords, duplicatedRecords,0);
-        return employeeDAO;
-    }
+//    private static EmployeeDAO creation() {
+//        long start = System.nanoTime();
+//        HashSet<Employee> validEntries = CSVReader.readDataFile("src/main/resources/EmployeeRecordsLarge.csv", 32);
+//        EmployeeDAO employeeDAO = new EmployeeDAO();
+//        employeeDAO.createEmployeeTable();
+//        concurrently(validEntries, employeeDAO, 32);
+//        long end = System.nanoTime();
+//
+//        int duplicatedRecords = CSVReader.getDuplicatedEntries().size();
+//        int corruptedRecords = CSVReader.getCorruptedEntries().size() + duplicatedRecords;
+//        DisplayManager.printPersistingResults(start, end, validEntries.size(), corruptedRecords, duplicatedRecords,0);
+//        return employeeDAO;
+//    }
 }

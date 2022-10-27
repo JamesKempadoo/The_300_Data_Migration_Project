@@ -1,4 +1,6 @@
-package com.sparta.the300;
+package com.sparta.the300.model;
+
+import com.sparta.the300.model.Employee;
 
 import java.sql.Date;
 

@@ -1,4 +1,5 @@
-package com.sparta.the300;
+package com.sparta.the300.model;
+
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -97,7 +98,7 @@ public class EmployeeDAO {
 
     public int countAllEmployees() {
         Connection newConnection = connectingToDataBase();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO);){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO)){
             ResultSet resultSet = preparedStatement.executeQuery(SELECT_COUNT_EMPLOYEES);
             if (resultSet != null) {
                 while (resultSet.next()) {
@@ -227,5 +228,5 @@ public class EmployeeDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    };
+    }
 }

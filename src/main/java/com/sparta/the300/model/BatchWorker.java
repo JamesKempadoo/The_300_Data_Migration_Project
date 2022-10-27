@@ -1,14 +1,14 @@
-package com.sparta.the300;
+package com.sparta.the300.model;
 
 import java.sql.Connection;
 import java.util.List;
 
-public class ThreadTask implements Runnable{
+public class BatchWorker implements Runnable{
     private final List<Employee> sublist;
     private final EmployeeDAO employeeDAO;
 
 
-    public ThreadTask(List<Employee> sublist, EmployeeDAO employeeDAO) {
+    public BatchWorker(List<Employee> sublist, EmployeeDAO employeeDAO) {
         this.sublist = sublist;
         this.employeeDAO = employeeDAO;
     }
