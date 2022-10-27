@@ -76,7 +76,6 @@ public class CSVReader {
     }
 
     private static void createThreadWithBatch(int lowBound, int highBound) {
-        System.out.println(lowBound + "::" + highBound);
         List<Employee> batchList = new ArrayList<>(batchEntries.subList(lowBound, highBound));
         Thread thread = new Thread(new BatchWorker(batchList, employeeDAO));
         threads.add(thread);
