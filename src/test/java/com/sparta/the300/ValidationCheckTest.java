@@ -1,5 +1,7 @@
 package com.sparta.the300;
 
+import com.sparta.the300.model.Employee;
+import com.sparta.the300.model.ValidationCheck;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

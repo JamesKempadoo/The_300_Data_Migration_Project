@@ -1,4 +1,4 @@
-package com.sparta.the300;
+package com.sparta.the300.model;
 
 import java.sql.Date;
 import java.text.ParseException;
