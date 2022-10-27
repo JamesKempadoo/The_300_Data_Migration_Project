@@ -1,37 +1,23 @@
 package com.sparta.the300.model;
 
 
+import com.sparta.the300.loggers.CustomLoggerConfiguration;
+import com.sparta.the300.utility.SQLQueries;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 
-public class EmployeeDAO {
+public class EmployeeDAO implements SQLQueries {
     private static Properties properties = new Properties();
     private static final String URL = "jdbc:mysql://localhost:3306/employeedb";
     private static Connection connection = null;
-
-
-    private static final String SELECT_EMPLOYEES = "SELECT * FROM employees;";
-    private static final String SELECT_COUNT_EMPLOYEES = "SELECT COUNT(*) FROM employees";
-    private static final String DROP_TABLE = "DROP TABLE employees";
-    private static final String INSERT_INTO = "INSERT INTO employees " +
-            "(employee_id, title, first_name, middle_initial, last_name, gender, " +
-            "email, birth_date, join_date, salary) " +
-            "VALUES(?,?,?,?,?,?,?,?,?,?);";
-    private static final String CREATE_TABLE = "CREATE TABLE employees (" +
-            "employee_id VARCHAR(10) NOT NULL PRIMARY KEY," +
-            "title VARCHAR(5)," +
-            "first_name VARCHAR(30)," +
-            "middle_initial CHAR(1)," +
-            "last_name VARCHAR(30)," +
-            "gender VARCHAR(1)," +
-            "email VARCHAR(40)," +
-            "birth_date DATE," +
-            "join_date DATE," +
-            "salary INTEGER" +
-            ");";
+    public static String[] headings = {"employee_id", "first_name", "last_name", "gender", "email",
+            "birth_date", "join_date"};
+    private static CustomLoggerConfiguration customLoggerConfiguration = CustomLoggerConfiguration.getInstance();
 
     public Connection connectingToDataBase() {
         try {
@@ -39,13 +25,13 @@ public class EmployeeDAO {
             connection = DriverManager.getConnection(URL, properties.getProperty("username"), properties.getProperty("password"));
             connection.setAutoCommit(false);
         } catch (IOException e) {
-            //log
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "IO exception caught.");
             e.printStackTrace();
         } catch (SQLException e) {
-            //log
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception caught.");
             e.printStackTrace();
         } catch (Exception e) {
-            //lgo
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "Exception caught.");
             e.printStackTrace();
         }
         return connection;
@@ -75,6 +61,7 @@ public class EmployeeDAO {
             }
             resultSet.close();
         } catch (SQLException e) {
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception caught.");
             throw new RuntimeException(e);
         }
         return false;
@@ -84,6 +71,7 @@ public class EmployeeDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TABLE);){
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             throw new RuntimeException(e);
         }
     }
@@ -92,6 +80,7 @@ public class EmployeeDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(DROP_TABLE);){
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             throw new RuntimeException(e);
         }
     }
@@ -108,6 +97,7 @@ public class EmployeeDAO {
                 System.out.println("No records in the table");
             }
         } catch (SQLException e) {
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             throw new RuntimeException(e);
         }
 
@@ -119,12 +109,12 @@ public class EmployeeDAO {
         try{
             if (employeeTableCheck()){
                 dropTable();
-                //log
             }
             createTable();
             connection.commit();
-                //log
+
         } catch (Exception e) {
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             throw new RuntimeException(e);
         }finally {
             disconnectingFromDatabase(newConnection);
@@ -152,6 +142,7 @@ public class EmployeeDAO {
                 }
             }
         } catch (SQLException e) {
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             throw new RuntimeException(e);
         }
     }
@@ -178,6 +169,7 @@ public class EmployeeDAO {
             //connection.commit();
 
         } catch (SQLException e) {
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             e.printStackTrace();
         } finally {
             //disconnectingFromDatabase();
@@ -188,12 +180,11 @@ public class EmployeeDAO {
         try {
             newConnection.commit();
         } catch (SQLException e) {
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             throw new RuntimeException(e);
         }
     }
 
-    public static final String[] headings = {"employee_id", "first_name", "last_name", "gender", "email",
-            "birth_date", "join_date"};
     public String getColumnToSearchIn(int column){
         return headings[column];
     }
@@ -219,13 +210,18 @@ public class EmployeeDAO {
                             resultSet.getInt(10));
                     count++;
                 }
+                customLoggerConfiguration.myLogger.log(Level.FINE,
+                        count + " records found when searching " + filter + " in column " + column);
                 System.out.println(count + " records found.");
             } else {
+                customLoggerConfiguration.myLogger.log(Level.FINE,
+                        "0 records found when searching " + filter + " in column " + column);
                 System.out.println("0 records found");
             }
 
 
         } catch (SQLException e) {
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             e.printStackTrace();
         }
     }

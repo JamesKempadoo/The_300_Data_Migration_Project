@@ -5,6 +5,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 
 public class CustomFileHandler {
+
     public static FileHandler getFileHandler() {
         FileHandler fileHandler;
         try {
