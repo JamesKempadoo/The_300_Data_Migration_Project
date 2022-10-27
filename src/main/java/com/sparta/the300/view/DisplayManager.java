@@ -1,17 +1,21 @@
 package com.sparta.the300.view;
 
+import com.sparta.the300.controller.CSVReader;
 import com.sparta.the300.model.Employee;
 import com.sparta.the300.model.EmployeeDAO;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class DisplayManager {
 
     public static void displayInitialConfiguration() {
         System.out.print("""
                 Please enter:
-                1. The file name
+                1. The file name ('d' for EmployeeRecordsLarge.csv)
                 2. If you want to use threaded version ('y' for yes, 'n' for no)
                 3. The number of threads (if you answer 'y' to the above)
                 
@@ -25,6 +29,7 @@ public class DisplayManager {
                 Example Inputs:
                 1. example.csv y 16
                 2. example1.csv n
+                3. d y 32
                 
                 Parse your inputs seperated by space:""");
     }
@@ -41,8 +46,7 @@ public class DisplayManager {
                         "\n>>>>>> Corrupted: " + corruptedRecords + "\n");
         System.out.println(
                 "Out of the corrupted records:\n" +
-                        ">>>>>> " + duplicated + " duplicated\n" +
-                        ">>>>>> " + withMissingFields + " with missing fields\n");
+                        ">>>>>> " + duplicated + " duplicated");
     }
 
     public static void printCorruptedRecords(List<Employee> employees) {
@@ -56,11 +60,18 @@ public class DisplayManager {
 
     }
 
+    public static void printRetrieveDataOption() {
+        System.out.print("\n\nDo you want to retrieve data from the database ('y' or 'n'):");
+    }
+
     public static void printRecordRetrievalMenu(){
-        String[] headings = EmployeeDAO.headings;
+        List<String> headings = new ArrayList<>();
+        headings = Arrays.stream(CSVReader.getHeadings().split(","))
+                .filter(s -> !s.equals("Middle Initial") && !s.equals("Salary") && !s.equals("Name Prefix"))
+                .collect(Collectors.toList());
         System.out.println("Select one of these fields to search in:");
-                for(int i=0; i< headings.length; i++){
-                    System.out.println(i + ". " + headings[i]);
+                for(int i=0; i< headings.size(); i++){
+                    System.out.println(i + ". " + headings.get(i));
                 }
     }
 
