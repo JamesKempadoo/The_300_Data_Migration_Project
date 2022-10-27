@@ -3,7 +3,6 @@ package com.sparta.the300;
 import com.sparta.the300.view.DisplayManager;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class DataMigrationLoader {
     private static Scanner sc = new Scanner(System.in);
@@ -40,8 +39,7 @@ public class DataMigrationLoader {
             }else{
                 subArray= arrayList.subList(i,i+x1);
             }
-            employeeDAO.tryCon();
-
+            //employeeDAO.tryCon();
             threads[threadCounter] = new Thread(new ThreadTask(subArray,employeeDAO));
             threads[threadCounter].setName("Thread: " + threadCounter);
             threads[threadCounter].start();
@@ -54,10 +52,7 @@ public class DataMigrationLoader {
                 throw new RuntimeException(e);
             }
         }
-
     }
-
-
     private static void retrieval(EmployeeDAO employeeDAO) {
         DisplayManager.printRecordRetrievalMenu();
         try {
@@ -74,10 +69,10 @@ public class DataMigrationLoader {
 
     private static EmployeeDAO creation() {
         long start = System.nanoTime();
-        HashSet<Employee> validEntries = CSVReader.readDataFile("src/main/resources/EmployeeRecords.csv");
+        HashSet<Employee> validEntries = CSVReader.readDataFile("src/main/resources/EmployeeRecordsLarge.csv");
         EmployeeDAO employeeDAO = new EmployeeDAO();
         employeeDAO.createEmployeeTable();
-        concurrently(validEntries,  employeeDAO, 8);
+        concurrently(validEntries, employeeDAO, 64);
         long end = System.nanoTime();
 
         int duplicatedRecords = CSVReader.getDuplicatedEntries().size();

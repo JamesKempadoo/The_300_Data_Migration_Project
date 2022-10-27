@@ -3,7 +3,6 @@ package com.sparta.the300;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,29 +32,31 @@ public class EmployeeDAO {
             "salary INTEGER" +
             ");";
 
-    private void connectingToDataBase(){
-        try{
+    public Connection connectingToDataBase() {
+        try {
             properties.load(new FileReader("src/main/resources/login.properties"));
             connection = DriverManager.getConnection(URL, properties.getProperty("username"), properties.getProperty("password"));
             connection.setAutoCommit(false);
-        }catch (IOException e){
+        } catch (IOException e) {
             //log
             e.printStackTrace();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             //log
             e.printStackTrace();
-        }catch (Exception e){
+        } catch (Exception e) {
             //lgo
             e.printStackTrace();
         }
+        return connection;
     }
-    private void disconnectingFromDatabase(){
-        try{
+
+    public void disconnectingFromDatabase(Connection newConnection) {
+        try {
             connection.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             //log
             e.printStackTrace();
-        }catch (Exception e){
+        } catch (Exception e) {
             //lgo
             e.printStackTrace();
         }
@@ -95,7 +96,7 @@ public class EmployeeDAO {
     }
 
     public int countAllEmployees() {
-        tryCon();
+        Connection newConnection = connectingToDataBase();
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO);){
             ResultSet resultSet = preparedStatement.executeQuery(SELECT_COUNT_EMPLOYEES);
             if (resultSet != null) {
@@ -113,8 +114,8 @@ public class EmployeeDAO {
     }
 
     public void createEmployeeTable(){
+        Connection newConnection = connectingToDataBase();
         try{
-            tryCon();
             if (employeeTableCheck()){
                 dropTable();
                 //log
@@ -125,23 +126,15 @@ public class EmployeeDAO {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }finally {
-            disconnectingFromDatabase();
+            disconnectingFromDatabase(newConnection);
         }
     }
 
-    public void tryCon(){
-        try {
-            if (connection == null ||connection.isClosed()){
-                connectingToDataBase();}
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void selectEmployees(){
+        Connection newConnection = connectingToDataBase();
         try {
-            tryCon();
-            Statement statement = connection.createStatement();
+            Statement statement = newConnection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_EMPLOYEES);
             if (resultSet!=null){
                 while (resultSet.next()){
@@ -153,7 +146,7 @@ public class EmployeeDAO {
                             resultSet.getString(6)+ " " +
                             resultSet.getString(7)+ " " +
                             resultSet.getString(8)+ " " +
-                            resultSet.getString(9)+ " " +
+                            resultSet.getString(9) + " " +
                             resultSet.getInt(10));
                 }
             }
@@ -163,11 +156,8 @@ public class EmployeeDAO {
     }
 
 
-    public void insertIntoTable(List<Employee> employees) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO)) {
-            if (connection == null || connection.isClosed()) {
-                connectingToDataBase();
-            }
+    public void insertIntoTable(List<Employee> employees, Connection newConnection) {
+        try (PreparedStatement preparedStatement = newConnection.prepareStatement(INSERT_INTO)) {
             for (Employee employee : employees) {
                 preparedStatement.setInt(1, employee.getIdNumber());
                 preparedStatement.setString(2, employee.getNamePrefix());
@@ -183,7 +173,7 @@ public class EmployeeDAO {
                 //preparedStatement.executeUpdate();
             }
             preparedStatement.executeBatch();
-            connection.commit();
+            newConnection.commit();
             //connection.commit();
 
         } catch (SQLException e) {
@@ -193,9 +183,9 @@ public class EmployeeDAO {
         }
     }
 
-    public void commit() {
+    public void commit(Connection newConnection) {
         try {
-            connection.commit();
+            newConnection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -209,7 +199,7 @@ public class EmployeeDAO {
     public void selectIndividualRecords(String column, String filter){
         String SELECT_INDIVIDUAL_RECORDS = "SELECT * FROM employees WHERE " + column + " LIKE ?";
         int count = 0;
-        tryCon();
+        Connection newConnection = connectingToDataBase();
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_INDIVIDUAL_RECORDS)){
             preparedStatement.setString(1, filter);
             ResultSet resultSet = preparedStatement.executeQuery();
