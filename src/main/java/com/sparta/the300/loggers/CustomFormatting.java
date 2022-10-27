@@ -12,6 +12,7 @@ public class CustomFormatting extends Formatter {
     public String format(LogRecord record) {
     return (LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 + " " + record.getSourceClassName()
+                + " " + record.getSourceMethodName()
                 + " " + record.getLevel()
                 + " " + record.getMessage()
                 + "\n";
