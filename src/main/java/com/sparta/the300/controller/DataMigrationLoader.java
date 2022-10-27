@@ -17,8 +17,9 @@ public class DataMigrationLoader {
             EmployeeDAO employeeDAO = new EmployeeDAO();
             if (option == 1) {
                 long start = System.nanoTime();
-                HashSet<Employee> validEntries = CSVReader.readDataFile("src/main/resources/EmployeeRecordsLarge.csv", 16, true);
+                CSVReader.readDataFile("src/main/resources/EmployeeRecordsLarge.csv", 16, true);
                 long end = System.nanoTime();
+                HashSet<Employee> validEntries = CSVReader.getValidEntries();
                 int duplicatedRecords = CSVReader.getDuplicatedEntries().size();
                 int corruptedRecords = CSVReader.getCorruptedEntries().size() + duplicatedRecords;
                 DisplayManager.printPersistingResults(start, end, validEntries.size(), corruptedRecords, duplicatedRecords, 0);

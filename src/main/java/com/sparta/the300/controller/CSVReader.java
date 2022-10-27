@@ -10,6 +10,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,6 +20,8 @@ import java.util.List;
 public class CSVReader {
 
     private static final EmployeeDAO employeeDAO = new EmployeeDAO();
+
+    private static HashSet<Employee> validEntries = new HashSet<>();
     private static final ArrayList<Employee> corruptedEntries = new ArrayList<>();
     private static final ArrayList<Employee> duplicatedEntries = new ArrayList<>();
 
@@ -26,7 +30,7 @@ public class CSVReader {
     private static final ArrayList<Thread> threads = new ArrayList<>();
     private static String headings = null;
 
-    public static HashSet<Employee> readDataFile(String filename, int numOfThreads, boolean isThreaded) {
+    public static void readDataFile(String filename, int numOfThreads, boolean isThreaded) {
         FileReader fileReader;
         long totalLines;
         try {
@@ -37,11 +41,10 @@ public class CSVReader {
         }
         BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-        return CSVReader.readDataFile(bufferedReader, totalLines, numOfThreads, isThreaded);
+        CSVReader.readDataFile(bufferedReader, totalLines, numOfThreads, isThreaded);
     }
 
-    private static HashSet<Employee> readDataFile(BufferedReader br, long totalLines, int numOfThreads, boolean isThreaded) {
-        HashSet<Employee> employeesSet = new HashSet<>();
+    private static void readDataFile(BufferedReader br, long totalLines, int numOfThreads, boolean isThreaded) {
         employeeDAO.createEmployeeTable();
         try {
             headings = br.readLine();
@@ -52,7 +55,7 @@ public class CSVReader {
                 Employee employee = generateEmployee(line);
                 if (!ValidationCheck.isEmployeeValid(employee)) {
                     corruptedEntries.add(employee);
-                } else if (!employeesSet.add(employee)) {
+                } else if (!validEntries.add(employee)) {
                     duplicatedEntries.add(employee);
                 } else {
                     batchEntries.add(employee);
@@ -62,9 +65,17 @@ public class CSVReader {
                     lowBound = highBound;
                 }
             }
-            createThreadWithBatch(lowBound, batchEntries.size());
-            for (Thread thread : threads) {
-                thread.join();
+            if (isThreaded) {
+                createThreadWithBatch(lowBound, batchEntries.size());
+                for (Thread thread : threads) {
+                    thread.join();
+                }
+            } else {
+                try(Connection connection = employeeDAO.connectingToDataBase()){
+                    employeeDAO.insertIntoTable(batchEntries, connection);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         } catch (IOException | ParseException ex) {
             ex.printStackTrace();
@@ -72,7 +83,6 @@ public class CSVReader {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        return employeesSet;
     }
 
     private static void createThreadWithBatch(int lowBound, int highBound) {
@@ -98,5 +108,9 @@ public class CSVReader {
 
     public static String getHeadings() {
         return headings;
+    }
+
+    public static HashSet<Employee> getValidEntries() {
+        return validEntries;
     }
 }
