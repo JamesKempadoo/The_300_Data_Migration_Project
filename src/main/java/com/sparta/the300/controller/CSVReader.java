@@ -21,7 +21,7 @@ public class CSVReader {
 
     private static final EmployeeDAO employeeDAO = new EmployeeDAO();
 
-    private static HashSet<Employee> validEntries = new HashSet<>();
+    private static final HashSet<Employee> validEntries = new HashSet<>();
     private static final ArrayList<Employee> corruptedEntries = new ArrayList<>();
     private static final ArrayList<Employee> duplicatedEntries = new ArrayList<>();
 
@@ -50,7 +50,7 @@ public class CSVReader {
             headings = br.readLine();
             String line;
             int lowBound = 0;
-            int highBound = 0;
+            int highBound = -1;
             while ((line = br.readLine()) != null) {
                 Employee employee = generateEmployee(line);
                 if (!ValidationCheck.isEmployeeValid(employee)) {
@@ -59,8 +59,9 @@ public class CSVReader {
                     duplicatedEntries.add(employee);
                 } else {
                     batchEntries.add(employee);
+                    highBound++;
                 }
-                if ((isThreaded) && (highBound++ - lowBound) >= totalLines / numOfThreads) {
+                if ((isThreaded) && (highBound - lowBound) >= totalLines / numOfThreads) {
                     createThreadWithBatch(lowBound, highBound);
                     lowBound = highBound;
                 }
