@@ -41,10 +41,10 @@ public class EmployeeDAO implements SQLQueries {
         try {
             connection.close();
         } catch (SQLException e) {
-            //log
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception caught.");
             e.printStackTrace();
         } catch (Exception e) {
-            //lgo
+            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception caught.");
             e.printStackTrace();
         }
     }
