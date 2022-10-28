@@ -2,8 +2,12 @@ package com.sparta.the300.utility;
 
 public interface SQLQueries {
 
+    String[] columns = {"employee_id", "first_name", "last_name", "gender",
+            "email", "birth_date", "join_date"};
     String SELECT_EMPLOYEES = "SELECT * FROM employees;";
     String DROP_TABLE = "DROP TABLE employees";
+
+    String SELECT_INDIVIDUAL_RECORDS = "SELECT * FROM employees WHERE ? LIKE ?";
     String INSERT_INTO = "INSERT INTO employees " +
             "(employee_id, title, first_name, middle_initial, last_name, gender, " +
             "email, birth_date, join_date, salary) " +
