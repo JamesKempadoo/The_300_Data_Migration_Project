@@ -40,12 +40,16 @@ This section purpose is to compare the time efficiency of the application using 
 number of threads. The thread usage is important as the second part of the project has
 to do with the data transfer of a large file.
 
+
 | Number of threads | Time (s) |
 |:-----------------:|:--------:|
-|         1         |          |
-|         2         |          |
-|         4         |          |
-|         8         |          |
-|        16         |          |
-|        20         |          |
+|         0         |   8.01   | 
+|         1         |   7.47   |
+|         2         |   4.74   |
+|         4         |   3.08   |
+|         8         |   2.34   |
+|        16         |   1.98   |
+|        20         |   2.09   |
+|        32         |   2.45   |
+
 
