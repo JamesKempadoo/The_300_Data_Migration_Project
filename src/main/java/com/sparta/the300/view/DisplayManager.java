@@ -2,7 +2,6 @@ package com.sparta.the300.view;
 
 import com.sparta.the300.controller.CSVReader;
 import com.sparta.the300.model.Employee;
-import com.sparta.the300.model.EmployeeDAO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +18,7 @@ public class DisplayManager {
                 2. If you want to use threaded version ('y' for yes, 'n' for no)
                 3. The number of threads (if you answer 'y' to the above)
                 
-                Parse your inputs seperated by space:""");
+                Parse your inputs separated by space:""");
     }
 
     public static void printWrongInputMessage() {
@@ -31,7 +30,7 @@ public class DisplayManager {
                 2. example1.csv n
                 3. d y 32
                 
-                Parse your inputs seperated by space:""");
+                Parse your inputs separated by space:""");
     }
 
     public static void printPersistingResults(long start, long end, int uncorruptedRecords, int corruptedRecords,

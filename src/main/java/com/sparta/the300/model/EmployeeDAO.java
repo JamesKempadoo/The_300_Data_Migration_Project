@@ -49,13 +49,13 @@ public class EmployeeDAO implements SQLQueries {
         }
     }
 
-    private boolean employeeTableCheck(Connection newConnection){
+    private boolean employeeTableCheck(Connection newConnection) {
         try {
             ResultSet resultSet = newConnection.getMetaData().getTables(null,
-                    null,"employees",new String[] {"TABLE"});
+                    null, "employees", new String[]{"TABLE"});
             while (resultSet.next()) {
                 String databaseName = resultSet.getString("TABLE_NAME");
-                if(databaseName.equals("employees")){
+                if (databaseName.equals("employees")) {
                     return true;
                 }
             }
@@ -67,8 +67,8 @@ public class EmployeeDAO implements SQLQueries {
         return false;
     }
 
-    public void createTable(Connection newConnection){
-        try (PreparedStatement preparedStatement = newConnection.prepareStatement(CREATE_TABLE);){
+    public void createTable(Connection newConnection) {
+        try (PreparedStatement preparedStatement = newConnection.prepareStatement(CREATE_TABLE);) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
@@ -76,8 +76,8 @@ public class EmployeeDAO implements SQLQueries {
         }
     }
 
-    public void dropTable(Connection newConnection){
-        try (PreparedStatement preparedStatement = newConnection.prepareStatement(DROP_TABLE);){
+    public void dropTable(Connection newConnection) {
+        try (PreparedStatement preparedStatement = newConnection.prepareStatement(DROP_TABLE);) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
@@ -85,29 +85,11 @@ public class EmployeeDAO implements SQLQueries {
         }
     }
 
-    public int countAllEmployees() {
-        Connection newConnection = connectingToDataBase();
-        try (PreparedStatement preparedStatement = newConnection.prepareStatement(INSERT_INTO)){
-            ResultSet resultSet = preparedStatement.executeQuery(SELECT_COUNT_EMPLOYEES);
-            if (resultSet != null) {
-                while (resultSet.next()) {
-                    return resultSet.getInt(1);
-                }
-            } else {
-                System.out.println("No records in the table");
-            }
-        } catch (SQLException e) {
-            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
-            throw new RuntimeException(e);
-        }
 
-        return 0;
-    }
-
-    public void createEmployeeTable(){
+    public void createEmployeeTable() {
         Connection newConnection = connectingToDataBase();
-        try{
-            if (employeeTableCheck(newConnection)){
+        try {
+            if (employeeTableCheck(newConnection)) {
                 dropTable(newConnection);
             }
             createTable(newConnection);
@@ -116,27 +98,27 @@ public class EmployeeDAO implements SQLQueries {
         } catch (Exception e) {
             customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             disconnectingFromDatabase(newConnection);
         }
     }
 
 
-    public void selectEmployees(){
+    public void selectEmployees() {
         Connection newConnection = connectingToDataBase();
         try {
             Statement statement = newConnection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_EMPLOYEES);
-            if (resultSet!=null){
-                while (resultSet.next()){
-                    System.out.println(resultSet.getString(1)+ " " +
-                            resultSet.getString(2)+ " " +
-                            resultSet.getString(3)+ " " +
-                            resultSet.getString(4)+ " " +
-                            resultSet.getString(5)+ " " +
-                            resultSet.getString(6)+ " " +
-                            resultSet.getString(7)+ " " +
-                            resultSet.getString(8)+ " " +
+            if (resultSet != null) {
+                while (resultSet.next()) {
+                    System.out.println(resultSet.getString(1) + " " +
+                            resultSet.getString(2) + " " +
+                            resultSet.getString(3) + " " +
+                            resultSet.getString(4) + " " +
+                            resultSet.getString(5) + " " +
+                            resultSet.getString(6) + " " +
+                            resultSet.getString(7) + " " +
+                            resultSet.getString(8) + " " +
                             resultSet.getString(9) + " " +
                             resultSet.getInt(10));
                 }
@@ -162,51 +144,39 @@ public class EmployeeDAO implements SQLQueries {
                 preparedStatement.setDate(9, employee.getDateOfEmployment());
                 preparedStatement.setInt(10, employee.getSalary());
                 preparedStatement.addBatch();
-                //preparedStatement.executeUpdate();
+
             }
             preparedStatement.executeBatch();
             newConnection.commit();
-            //connection.commit();
-
         } catch (SQLException e) {
             customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             e.printStackTrace();
-        } finally {
-            //disconnectingFromDatabase(newConnection);
         }
     }
 
-    public void commit(Connection newConnection) {
-        try {
-            newConnection.commit();
-        } catch (SQLException e) {
-            customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
-            throw new RuntimeException(e);
-        }
-    }
-
-    public String getColumnToSearchIn(int column){
+    public String getColumnToSearchIn(int column) {
         return headings[column];
     }
-    public void selectIndividualRecords(String column, String filter){
+
+    public void selectIndividualRecords(String column, String filter) {
         String SELECT_INDIVIDUAL_RECORDS = "SELECT * FROM employees WHERE " + column + " LIKE ?";
         int count = 0;
         Connection newConnection = connectingToDataBase();
-        try (PreparedStatement preparedStatement = newConnection.prepareStatement(SELECT_INDIVIDUAL_RECORDS)){
+        try (PreparedStatement preparedStatement = newConnection.prepareStatement(SELECT_INDIVIDUAL_RECORDS)) {
             preparedStatement.setString(1, filter);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if(resultSet != null){
-                while(resultSet.next()){
-                    System.out.println(resultSet.getString(1)+ " " +
-                            resultSet.getString(2)+ " " +
-                            resultSet.getString(3)+ " " +
-                            resultSet.getString(4)+ " " +
-                            resultSet.getString(5)+ " " +
-                            resultSet.getString(6)+ " " +
-                            resultSet.getString(7)+ " " +
-                            resultSet.getString(8)+ " " +
-                            resultSet.getString(9)+ " " +
+            if (resultSet != null) {
+                while (resultSet.next()) {
+                    System.out.println(resultSet.getString(1) + " " +
+                            resultSet.getString(2) + " " +
+                            resultSet.getString(3) + " " +
+                            resultSet.getString(4) + " " +
+                            resultSet.getString(5) + " " +
+                            resultSet.getString(6) + " " +
+                            resultSet.getString(7) + " " +
+                            resultSet.getString(8) + " " +
+                            resultSet.getString(9) + " " +
                             resultSet.getInt(10));
                     count++;
                 }

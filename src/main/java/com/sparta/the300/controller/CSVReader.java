@@ -72,7 +72,7 @@ public class CSVReader {
                     thread.join();
                 }
             } else {
-                try(Connection connection = employeeDAO.connectingToDataBase()){
+                try (Connection connection = employeeDAO.connectingToDataBase()) {
                     employeeDAO.insertIntoTable(batchEntries, connection);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
