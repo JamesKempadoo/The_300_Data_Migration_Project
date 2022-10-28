@@ -1,6 +1,7 @@
 package com.sparta.the300.model;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class BatchWorker implements Runnable{
@@ -18,7 +19,12 @@ public class BatchWorker implements Runnable{
     public void run() {
         Connection connection = employeeDAO.connectingToDataBase();
         employeeDAO.insertIntoTable(sublist, connection);
-        employeeDAO.commit(connection);
+        //employeeDAO.commit(connection);
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }

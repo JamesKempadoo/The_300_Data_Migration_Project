@@ -172,7 +172,7 @@ public class EmployeeDAO implements SQLQueries {
             customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
             e.printStackTrace();
         } finally {
-            //disconnectingFromDatabase();
+            //disconnectingFromDatabase(newConnection);
         }
     }
 
