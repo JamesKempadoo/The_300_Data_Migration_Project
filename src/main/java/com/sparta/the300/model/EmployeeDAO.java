@@ -14,12 +14,12 @@ import java.util.logging.Level;
 public class EmployeeDAO implements SQLQueries {
     private static Properties properties = new Properties();
     private static final String URL = "jdbc:mysql://localhost:3306/employeedb";
-    private static Connection connection = null;
     public static String[] headings = {"employee_id", "first_name", "last_name", "gender", "email",
             "birth_date", "join_date"};
     private static CustomLoggerConfiguration customLoggerConfiguration = CustomLoggerConfiguration.getInstance();
 
     public Connection connectingToDataBase() {
+        Connection connection = null;
         try {
             properties.load(new FileReader("src/main/resources/login.properties"));
             connection = DriverManager.getConnection(URL, properties.getProperty("username"), properties.getProperty("password"));
@@ -39,7 +39,7 @@ public class EmployeeDAO implements SQLQueries {
 
     public void disconnectingFromDatabase(Connection newConnection) {
         try {
-            connection.close();
+            newConnection.close();
         } catch (SQLException e) {
             customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception caught.");
             e.printStackTrace();
@@ -49,9 +49,9 @@ public class EmployeeDAO implements SQLQueries {
         }
     }
 
-    private boolean employeeTableCheck(){
+    private boolean employeeTableCheck(Connection newConnection){
         try {
-            ResultSet resultSet = connection.getMetaData().getTables(null,
+            ResultSet resultSet = newConnection.getMetaData().getTables(null,
                     null,"employees",new String[] {"TABLE"});
             while (resultSet.next()) {
                 String databaseName = resultSet.getString("TABLE_NAME");
@@ -67,8 +67,8 @@ public class EmployeeDAO implements SQLQueries {
         return false;
     }
 
-    public void createTable(){
-        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TABLE);){
+    public void createTable(Connection newConnection){
+        try (PreparedStatement preparedStatement = newConnection.prepareStatement(CREATE_TABLE);){
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
@@ -76,8 +76,8 @@ public class EmployeeDAO implements SQLQueries {
         }
     }
 
-    public void dropTable(){
-        try (PreparedStatement preparedStatement = connection.prepareStatement(DROP_TABLE);){
+    public void dropTable(Connection newConnection){
+        try (PreparedStatement preparedStatement = newConnection.prepareStatement(DROP_TABLE);){
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
@@ -87,7 +87,7 @@ public class EmployeeDAO implements SQLQueries {
 
     public int countAllEmployees() {
         Connection newConnection = connectingToDataBase();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO)){
+        try (PreparedStatement preparedStatement = newConnection.prepareStatement(INSERT_INTO)){
             ResultSet resultSet = preparedStatement.executeQuery(SELECT_COUNT_EMPLOYEES);
             if (resultSet != null) {
                 while (resultSet.next()) {
@@ -107,11 +107,11 @@ public class EmployeeDAO implements SQLQueries {
     public void createEmployeeTable(){
         Connection newConnection = connectingToDataBase();
         try{
-            if (employeeTableCheck()){
-                dropTable();
+            if (employeeTableCheck(newConnection)){
+                dropTable(newConnection);
             }
-            createTable();
-            connection.commit();
+            createTable(newConnection);
+            newConnection.commit();
 
         } catch (Exception e) {
             customLoggerConfiguration.myLogger.log(Level.WARNING, "SQL exception.");
@@ -192,7 +192,7 @@ public class EmployeeDAO implements SQLQueries {
         String SELECT_INDIVIDUAL_RECORDS = "SELECT * FROM employees WHERE " + column + " LIKE ?";
         int count = 0;
         Connection newConnection = connectingToDataBase();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_INDIVIDUAL_RECORDS)){
+        try (PreparedStatement preparedStatement = newConnection.prepareStatement(SELECT_INDIVIDUAL_RECORDS)){
             preparedStatement.setString(1, filter);
             ResultSet resultSet = preparedStatement.executeQuery();
 
