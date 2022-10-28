@@ -20,11 +20,13 @@ public class BatchWorker implements Runnable{
         Connection connection = employeeDAO.connectingToDataBase();
         employeeDAO.insertIntoTable(sublist, connection);
         //employeeDAO.commit(connection);
+
         try {
             connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
 
     }
 }
