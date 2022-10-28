@@ -3,10 +3,8 @@ package com.sparta.the300.view;
 import com.sparta.the300.controller.CSVReader;
 import com.sparta.the300.model.Employee;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class DisplayManager {
@@ -37,7 +35,7 @@ public class DisplayManager {
                                       int duplicated){
 
         System.out.println("Execution time: " + (end-start) + " nanoseconds");
-        System.out.println("Execution time: " + TimeUnit.SECONDS.convert((end-start),TimeUnit.NANOSECONDS) + " seconds");
+        System.out.println("Execution time: " + (double) (end-start)/1000000000 + " seconds");
         System.out.println(
                 "Summary of records on file:\n" +
                         ">>>>>> Uncorrupted: " + uncorruptedRecords +
@@ -66,7 +64,7 @@ public class DisplayManager {
     }
 
     public static void printRecordRetrievalMenu(){
-        List<String> headings = new ArrayList<>();
+        List<String> headings;
         headings = Arrays.stream(CSVReader.getHeadings().split(","))
                 .filter(s -> !s.equals("Middle Initial") && !s.equals("Salary") && !s.equals("Name Prefix"))
                 .collect(Collectors.toList());
