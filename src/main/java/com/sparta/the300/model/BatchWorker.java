@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-public class BatchWorker implements Runnable{
+public class BatchWorker implements Runnable {
     private final List<Employee> sublist;
     private final EmployeeDAO employeeDAO;
 
@@ -19,8 +19,6 @@ public class BatchWorker implements Runnable{
     public void run() {
         Connection connection = employeeDAO.connectingToDataBase();
         employeeDAO.insertIntoTable(sublist, connection);
-        //employeeDAO.commit(connection);
-
         try {
             connection.close();
         } catch (SQLException e) {

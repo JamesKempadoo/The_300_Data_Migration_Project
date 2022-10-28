@@ -1,7 +1,5 @@
 package com.sparta.the300.model;
 
-import com.sparta.the300.model.Employee;
-
 import java.sql.Date;
 
 public class ValidationCheck {
@@ -21,15 +19,15 @@ public class ValidationCheck {
         return birthDate.getTime() < employmentDate.getTime();
     }
 
-    public static boolean isCorrectGender(String gender){
+    public static boolean isCorrectGender(String gender) {
         return (gender.equalsIgnoreCase("F") || gender.equalsIgnoreCase("M"));
     }
 
-    public static boolean hasMiddleName(String middleName){
+    public static boolean hasMiddleName(String middleName) {
         return middleName.length() == 1;
     }
 
-    public static boolean isCorrectSalary(int salary){
+    public static boolean isCorrectSalary(int salary) {
         return !(salary < 0);
     }
 }

@@ -67,7 +67,7 @@ public class DataMigrationLoader {
             in.nextLine();
 
             String filter;
-            if(column.equals("employee_id")){
+            if (column.equals("employee_id")) {
                 filter = in.nextLine();
             } else {
                 filter = "%" + in.nextLine() + "%";
